@@ -194,7 +194,7 @@ const Override: React.FC = () => {
             isLoading={importing}
             onPress={handleImport}
           >
-            导入
+            下载
           </Button>
           <Dropdown>
             <DropdownTrigger>

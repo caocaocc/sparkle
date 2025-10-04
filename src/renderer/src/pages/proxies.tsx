@@ -8,14 +8,14 @@ import {
   mihomoProxyDelay
 } from '@renderer/utils/ipc'
 import { CgDetailsLess, CgDetailsMore } from 'react-icons/cg'
-import { TbCircleLetterD } from 'react-icons/tb'
 import { FaLocationCrosshairs } from 'react-icons/fa6'
-import { RxLetterCaseCapitalize } from 'react-icons/rx'
+import { RiProhibitedLine, RiSortAlphabetAsc } from 'react-icons/ri'
+import { TiFlash } from 'react-icons/ti'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
 import ProxyItem from '@renderer/components/proxies/proxy-item'
 import { IoIosArrowBack } from 'react-icons/io'
-import { MdDoubleArrow, MdOutlineSpeed } from 'react-icons/md'
+import { MdDoubleArrow } from 'react-icons/md'
 import { useGroups } from '@renderer/hooks/use-groups'
 import CollapseInput from '@renderer/components/base/collapse-input'
 import { includesIgnoreCase } from '@renderer/utils/includes'
@@ -256,7 +256,7 @@ const Proxies: React.FC = () => {
                     className={`flex flex-col h-full ${proxyDisplayMode === 'full' && groupDisplayLayout === 'double' ? '' : 'justify-center'}`}
                   >
                     <div
-                      className={`text-ellipsis overflow-hidden whitespace-nowrap leading-tight ${proxyDisplayMode === 'full' && groupDisplayLayout === 'double' ? 'text-md flex-5 flex items-center' : 'text-lg'}`}
+                      className={`text-ellipsis overflow-hidden whitespace-nowrap leading-tight ${proxyDisplayMode === 'full' && groupDisplayLayout === 'double' ? 'text-md flex-5 flex items-center' : 'text-base'}`}
                     >
                       <span className="flag-emoji inline-block">{groups[index].name}</span>
                       {proxyDisplayMode === 'full' && groupDisplayLayout === 'single' && (
@@ -310,7 +310,7 @@ const Proxies: React.FC = () => {
                       isIconOnly
                       onPress={() => onGroupDelay(index)}
                     >
-                      <MdOutlineSpeed className="text-lg text-foreground-500" />
+                      <TiFlash className="text-lg text-foreground-500" />
                     </Button>
                   </div>
                   <IoIosArrowBack
@@ -393,7 +393,7 @@ const Proxies: React.FC = () => {
 
   return (
     <BasePage
-      title="代理组"
+      title="策略组"
       header={
         <>
           <Button
@@ -404,11 +404,11 @@ const Proxies: React.FC = () => {
             onPress={handleProxyDisplayOrderChange}
           >
             {proxyDisplayOrder === 'default' ? (
-              <TbCircleLetterD className="text-lg" title="默认" />
+              <RiProhibitedLine className="text-lg" title="默认" />
             ) : proxyDisplayOrder === 'delay' ? (
-              <MdOutlineSpeed className="text-lg" title="延迟" />
+              <TiFlash className="text-lg" title="延迟" />
             ) : (
-              <RxLetterCaseCapitalize className="text-lg" title="名称" />
+              <RiSortAlphabetAsc className="text-lg" title="名称" />
             )}
           </Button>
           <Button

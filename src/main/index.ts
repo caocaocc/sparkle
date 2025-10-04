@@ -20,7 +20,7 @@ import { createApplicationMenu } from './resolve/menu'
 import { init } from './utils/init'
 import { join } from 'path'
 import { initShortcut } from './resolve/shortcut'
-import { execSync, spawn } from 'child_process'
+import { execSync, spawn, spawnSync } from 'child_process'
 import { createElevateTask } from './sys/misc'
 import { initProfileUpdater } from './core/profileUpdater'
 import { existsSync, writeFileSync } from 'fs'
@@ -36,36 +36,87 @@ let quitTimeout: NodeJS.Timeout | null = null
 export let mainWindow: BrowserWindow | null = null
 
 if (process.platform === 'win32' && !is.dev && !process.argv.includes('noadmin')) {
+  let shouldExit = false
   try {
     createElevateTask()
   } catch (createError) {
-    try {
-      if (process.argv.slice(1).length > 0) {
-        writeFileSync(path.join(taskDir(), 'param.txt'), process.argv.slice(1).join(' '))
-      } else {
-        writeFileSync(path.join(taskDir(), 'param.txt'), 'empty')
-      }
-      if (!existsSync(path.join(taskDir(), 'sparkle-run.exe'))) {
-        throw new Error('sparkle-run.exe not found')
-      } else {
-        execSync('%SystemRoot%\\System32\\schtasks.exe /run /tn sparkle-run')
-      }
-    } catch (e) {
-      let createErrorStr = `${createError}`
-      let eStr = `${e}`
+    const escapePowerShellArg = (value: string): string => value.replace(/'/g, "''")
+    const args = process.argv.slice(1)
+    const argumentList = args.length
+      ? ` -ArgumentList @(${args.map((arg) => `'${escapePowerShellArg(arg)}'`).join(',')})`
+      : ''
+    const psCommand = `Start-Process -FilePath '${escapePowerShellArg(exePath())}'${argumentList} -Verb RunAs`
+    const elevateResult = spawnSync(
+      'powershell.exe',
+      ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', psCommand],
+      { windowsHide: true }
+    )
+
+    if (elevateResult.status === 0) {
+      shouldExit = true
+    } else {
+      const elevateError =
+        elevateResult.error ||
+        new Error(elevateResult.stderr?.toString() || `powershell exit code ${elevateResult.status}`)
+
+      let scheduleError: unknown
+      let scheduleSuccess = false
       try {
-        createErrorStr = iconv.decode((createError as { stderr: Buffer }).stderr, 'gbk')
-        eStr = iconv.decode((e as { stderr: Buffer }).stderr, 'gbk')
-      } catch {
-        // ignore
+        if (args.length > 0) {
+          writeFileSync(path.join(taskDir(), 'param.txt'), args.join(' '))
+        } else {
+          writeFileSync(path.join(taskDir(), 'param.txt'), 'empty')
+        }
+        if (!existsSync(path.join(taskDir(), 'sparkle-run.exe'))) {
+          throw new Error('sparkle-run.exe not found')
+        }
+        execSync('%SystemRoot%\\System32\\schtasks.exe /run /tn sparkle-run')
+        scheduleSuccess = true
+      } catch (e) {
+        scheduleError = e
       }
-      dialog.showErrorBox(
-        '首次启动请以管理员权限运行',
-        `首次启动请以管理员权限运行\n${createErrorStr}\n${eStr}`
-      )
-    } finally {
-      app.exit()
+
+      if (scheduleSuccess) {
+        shouldExit = true
+      } else {
+        let createErrorStr = `${createError}`
+        let elevateErrorStr = `${elevateError}`
+        let scheduleErrorStr = scheduleError ? `${scheduleError}` : undefined
+        try {
+          createErrorStr = iconv.decode((createError as { stderr: Buffer }).stderr, 'gbk')
+        } catch {
+          // ignore
+        }
+        try {
+          elevateErrorStr = iconv.decode((elevateError as { stderr: Buffer }).stderr, 'gbk')
+        } catch {
+          // ignore
+        }
+        if (scheduleErrorStr) {
+          try {
+            scheduleErrorStr = iconv.decode((scheduleError as { stderr: Buffer }).stderr, 'gbk')
+          } catch {
+            // ignore
+          }
+        }
+
+        const detailMessages = [createErrorStr, elevateErrorStr]
+        if (scheduleErrorStr) {
+          detailMessages.push(scheduleErrorStr)
+        }
+
+        dialog.showMessageBoxSync({
+          type: 'warning',
+          title: '未获取管理员权限',
+          message: 'Sparkle 未能获取管理员权限，部分系统级功能可能不可用。',
+          detail: detailMessages.filter(Boolean).join('\n')
+        })
+      }
     }
+  }
+
+  if (shouldExit) {
+    app.exit()
   }
 }
 
@@ -262,10 +313,10 @@ async function handleDeepLink(url: string): Promise<void> {
             url: profileUrl
           })
           mainWindow?.webContents.send('profileConfigUpdated')
-          new Notification({ title: '订阅导入成功' }).show()
+          new Notification({ title: '配置导入成功' }).show()
         }
       } catch (e) {
-        dialog.showErrorBox('订阅导入失败', `${url}\n${e}`)
+        dialog.showErrorBox('配置导入失败', `${url}\n${e}`)
       }
       break
     }

@@ -38,7 +38,7 @@ export async function setProfileConfig(config: ProfileConfig): Promise<void> {
 
 export async function getProfileItem(id: string | undefined): Promise<ProfileItem | undefined> {
   const { items } = await getProfileConfig()
-  if (!id || id === 'default') return { id: 'default', type: 'local', name: '空白订阅' }
+  if (!id || id === 'default') return { id: 'default', type: 'local', name: '配置' }
   return items.find((item) => item.id === id)
 }
 
@@ -110,7 +110,7 @@ export async function removeProfileItem(id: string): Promise<void> {
 
 export async function getCurrentProfileItem(): Promise<ProfileItem> {
   const { current } = await getProfileConfig()
-  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '空白订阅' }
+  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '配置' }
 }
 
 export async function createProfile(item: Partial<ProfileItem>): Promise<ProfileItem> {

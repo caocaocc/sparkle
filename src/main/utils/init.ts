@@ -252,7 +252,7 @@ export async function init(): Promise<void> {
   await cleanup()
   await startSubStoreFrontendServer()
   await startSubStoreBackendServer()
-  const { sysProxy, onlyActiveDevice = false, networkDetection = false } = await getAppConfig()
+  const { sysProxy, onlyActiveDevice = false, networkDetection = false, autoEnableSysProxy = true } = await getAppConfig()
   if (networkDetection) {
     await startNetworkDetection()
   }
@@ -260,10 +260,15 @@ export async function init(): Promise<void> {
     if (!(await isHelperInstalled())) {
       await patchAppConfig({ sysProxy: { enable: false } })
     } else {
-      if (sysProxy.enable) {
+      const shouldAutoEnable = autoEnableSysProxy !== false
+      const shouldEnable = shouldAutoEnable ? true : Boolean(sysProxy.enable)
+      if (shouldEnable) {
         await startPacServer()
       }
-      await triggerSysProxy(sysProxy.enable, onlyActiveDevice)
+      if (shouldAutoEnable && !sysProxy.enable) {
+        await patchAppConfig({ sysProxy: { ...sysProxy, enable: true } })
+      }
+      await triggerSysProxy(shouldEnable, onlyActiveDevice)
     }
   } catch {
     // ignore

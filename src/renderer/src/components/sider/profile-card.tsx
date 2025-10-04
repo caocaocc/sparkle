@@ -50,7 +50,7 @@ const ProfileCard: React.FC<Props> = (props) => {
   const info = items?.find((item) => item.id === current) ?? {
     id: 'default',
     type: 'local',
-    name: '空白订阅'
+    name: '配置'
   }
 
   const extra = info?.extra
@@ -60,7 +60,7 @@ const ProfileCard: React.FC<Props> = (props) => {
   if (iconOnly) {
     return (
       <div className={`${profileCardStatus} flex justify-center`}>
-        <Tooltip content="订阅管理" placement="right">
+        <Tooltip content="配置管理" placement="right">
           <Button
             size="sm"
             isIconOnly
@@ -255,7 +255,7 @@ const ProfileCard: React.FC<Props> = (props) => {
             <h3
               className={`text-md font-bold ${match ? 'text-primary-foreground' : 'text-foreground'}`}
             >
-              订阅管理
+              配置管理
             </h3>
           </CardFooter>
         </Card>
