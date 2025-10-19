@@ -30,7 +30,7 @@ export async function setProfileConfig(config: IProfileConfig): Promise<void> {
 
 export async function getProfileItem(id: string | undefined): Promise<IProfileItem | undefined> {
   const { items } = await getProfileConfig()
-  if (!id || id === 'default') return { id: 'default', type: 'local', name: '空白订阅' }
+  if (!id || id === 'default') return { id: 'default', type: 'local', name: '配置' }
   return items.find((item) => item.id === id)
 }
 
@@ -102,7 +102,7 @@ export async function removeProfileItem(id: string): Promise<void> {
 
 export async function getCurrentProfileItem(): Promise<IProfileItem> {
   const { current } = await getProfileConfig()
-  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '空白订阅' }
+  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '配置' }
 }
 
 export async function createProfile(item: Partial<IProfileItem>): Promise<IProfileItem> {
@@ -135,25 +135,33 @@ export async function createProfile(item: Partial<IProfileItem>): Promise<IProfi
         }
         res = await axios.get(urlObj.toString(), {
           headers: {
-            'User-Agent': userAgent || 'clash.meta/alpha-de19f92'
+            'User-Agent': userAgent || 'clash.meta'
           },
           responseType: 'text'
         })
       } else {
-        res = await axios.get(item.url, {
-          proxy:
-            newItem.useProxy && mixedPort != 0
-              ? {
-                  protocol: 'http',
-                  host: '127.0.0.1',
-                  port: mixedPort
-                }
-              : false,
-          headers: {
-            'User-Agent': userAgent || 'clash.meta/alpha-de19f92'
-          },
-          responseType: 'text'
-        })
+        try {
+          res = await axios.get(item.url, {
+            proxy: {
+              protocol: 'http',
+              host: '127.0.0.1',
+              port: mixedPort
+            },
+            headers: {
+              'User-Agent': userAgent || 'clash.meta'
+            },
+            responseType: 'text',
+            timeout: 5000
+          })
+        } catch (error) {
+          res = await axios.get(item.url, {
+            headers: {
+              'User-Agent': userAgent || 'clash.meta'
+            },
+            responseType: 'text',
+            timeout: 5000
+          })
+        }
       }
 
       const data = res.data

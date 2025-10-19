@@ -17,9 +17,9 @@ let downloadCancelToken: CancelTokenSource | null = null
 export async function checkUpdate(): Promise<IAppVersion | undefined> {
   const { 'mixed-port': mixedPort = 7890 } = await getControledMihomoConfig()
   const { updateChannel = 'stable' } = await getAppConfig()
-  let url = 'https://github.com/xishang0128/sparkle/releases/latest/download/latest.yml'
+  let url = 'https://github.com/caocaocc/sparkle/releases/latest/download/latest.yml'
   if (updateChannel == 'beta') {
-    url = 'https://github.com/xishang0128/sparkle/releases/download/pre-release/latest.yml'
+    url = 'https://github.com/caocaocc/sparkle/releases/download/pre-release/latest.yml'
   }
   const res = await axios.get(url, {
     headers: { 'Content-Type': 'application/octet-stream' },
@@ -47,12 +47,12 @@ export async function downloadAndInstallUpdate(version: string): Promise<void> {
   if (version.includes('beta')) {
     releaseTag = 'pre-release'
   }
-  const baseUrl = `https://github.com/xishang0128/sparkle/releases/download/${releaseTag}/`
+  const baseUrl = `https://github.com/caocaocc/sparkle/releases/download/${releaseTag}/`
   const fileMap = {
-    'win32-x64': `sparkle-windows-${version}-x64-setup.exe`,
-    'win32-arm64': `sparkle-windows-${version}-arm64-setup.exe`,
-    'darwin-x64': `sparkle-macos-${version}-x64.pkg`,
-    'darwin-arm64': `sparkle-macos-${version}-arm64.pkg`
+    'win32-x64': `sparkle-windows-${version}-x64-compatible-setup.exe`,
+    'win32-arm64': `sparkle-windows-${version}-arm64-compatible-setup.exe`,
+    'darwin-x64': `sparkle-macos-${version}-x64-compatible.pkg`,
+    'darwin-arm64': `sparkle-macos-${version}-arm64-compatible.pkg`
   }
   let file = fileMap[`${process.platform}-${process.arch}`]
   if (isPortable()) {
@@ -63,7 +63,7 @@ export async function downloadAndInstallUpdate(version: string): Promise<void> {
   }
   downloadCancelToken = axios.CancelToken.source()
 
-  const apiUrl = `https://api.github.com/repos/xishang0128/sparkle/releases/tags/${releaseTag}`
+  const apiUrl = `https://api.github.com/repos/caocaocc/sparkle/releases/tags/${releaseTag}`
   const apiRequestConfig: AxiosRequestConfig = {
     headers: { Accept: 'application/vnd.github.v3+json' },
     ...(mixedPort != 0 && {

@@ -8,14 +8,14 @@ import {
   mihomoProxyDelay
 } from '@renderer/utils/ipc'
 import { CgDetailsLess, CgDetailsMore } from 'react-icons/cg'
-import { TbCircleLetterD } from 'react-icons/tb'
+import { RiSortDesc, RiSortAlphabetAsc, RiSortNumberAsc } from 'react-icons/ri'
 import { FaLocationCrosshairs } from 'react-icons/fa6'
-import { RxLetterCaseCapitalize } from 'react-icons/rx'
+import { TiFlash } from 'react-icons/ti'
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
 import ProxyItem from '@renderer/components/proxies/proxy-item'
 import { IoIosArrowBack } from 'react-icons/io'
-import { MdDoubleArrow, MdOutlineSpeed } from 'react-icons/md'
+import { MdDoubleArrow } from 'react-icons/md'
 import { useGroups } from '@renderer/hooks/use-groups'
 import CollapseInput from '@renderer/components/base/collapse-input'
 import { includesIgnoreCase } from '@renderer/utils/includes'
@@ -28,6 +28,8 @@ const Proxies: React.FC = () => {
   const { appConfig, patchAppConfig } = useAppConfig()
   const {
     proxyDisplayMode = 'simple',
+    proxyDisplayLayout = 'double',
+    groupDisplayLayout = 'double',
     proxyDisplayOrder = 'default',
     autoCloseConnection = true,
     proxyCols = 'auto',
@@ -231,13 +233,13 @@ const Proxies: React.FC = () => {
         <div
           className={`w-full pt-2 ${index === groupCounts.length - 1 && !isOpen[index] ? 'pb-2' : ''} px-2`}
         >
-          <Card isPressable fullWidth onPress={() => toggleOpen(index)}>
+          <Card as="div" isPressable fullWidth onPress={() => toggleOpen(index)}>
             <CardBody className="w-full h-14">
               <div className="flex justify-between h-full">
                 <div className="flex text-ellipsis overflow-hidden whitespace-nowrap h-full">
                   {groups[index].icon ? (
                     <Avatar
-                      className="bg-transparent mr-2"
+                      className="bg-transparent mr-2 w-8 h-8"
                       size="sm"
                       radius="sm"
                       src={
@@ -248,14 +250,24 @@ const Proxies: React.FC = () => {
                     />
                   ) : null}
                   <div
-                    className={`flex flex-col h-full ${proxyDisplayMode === 'full' ? '' : 'justify-center'}`}
+                    className={`flex flex-col h-full ${proxyDisplayMode === 'full' && groupDisplayLayout === 'double' ? '' : 'justify-center'}`}
                   >
                     <div
-                      className={`text-ellipsis overflow-hidden whitespace-nowrap leading-tight ${proxyDisplayMode === 'full' ? 'text-md flex-[5] flex items-center' : 'text-lg'}`}
+                      className={`text-ellipsis overflow-hidden whitespace-nowrap leading-tight ${proxyDisplayMode === 'full' && groupDisplayLayout === 'double' ? 'text-md flex-[5] flex items-center' : 'text-base'}`}
                     >
                       <span className="flag-emoji inline-block">{groups[index].name}</span>
+                      {proxyDisplayMode === 'full' && groupDisplayLayout === 'single' && (
+                        <>
+                          <div title={groups[index].type} className="inline ml-2 text-sm text-foreground-500">
+                            {groups[index].type}
+                          </div>
+                          <div className="inline flag-emoji ml-2 text-sm text-foreground-500">
+                            {groups[index].now}
+                          </div>
+                        </>
+                      )}
                     </div>
-                    {proxyDisplayMode === 'full' && (
+                    {proxyDisplayMode === 'full' && groupDisplayLayout === 'double' && (
                       <div className="text-ellipsis whitespace-nowrap text-[10px] text-foreground-500 leading-tight flex-[3] flex items-center">
                         <span>{groups[index].type}</span>
                         <span className="flag-emoji ml-1 inline-block">{groups[index].now}</span>
@@ -263,38 +275,40 @@ const Proxies: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex">
-                  {proxyDisplayMode === 'full' && (
-                    <Chip size="sm" className="my-1 mr-2">
-                      {groups[index].all.length}
-                    </Chip>
-                  )}
-                  <CollapseInput
-                    title="搜索节点"
-                    value={searchValue[index]}
-                    onValueChange={(v) => updateSearchValue(index, v)}
-                  />
-                  <Button
-                    title="定位到当前节点"
-                    variant="light"
-                    size="sm"
-                    isIconOnly
-                    onPress={() => scrollToCurrentProxy(index)}
-                  >
-                    <FaLocationCrosshairs className="text-lg text-foreground-500" />
-                  </Button>
-                  <Button
-                    title="延迟测试"
-                    variant="light"
-                    isLoading={delaying[index]}
-                    size="sm"
-                    isIconOnly
-                    onPress={() => onGroupDelay(index)}
-                  >
-                    <MdOutlineSpeed className="text-lg text-foreground-500" />
-                  </Button>
+                <div className="flex items-center">
+                  <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                    {proxyDisplayMode === 'full' && (
+                      <Chip size="sm" className="my-1 mr-2">
+                        {groups[index].all.length}
+                      </Chip>
+                    )}
+                    <CollapseInput
+                      title="搜索节点"
+                      value={searchValue[index]}
+                      onValueChange={(v) => updateSearchValue(index, v)}
+                    />
+                    <Button
+                      title="定位到当前节点"
+                      variant="light"
+                      size="sm"
+                      isIconOnly
+                      onPress={() => scrollToCurrentProxy(index)}
+                    >
+                      <FaLocationCrosshairs className="text-lg text-foreground-500" />
+                    </Button>
+                    <Button
+                      title="延迟测试"
+                      variant="light"
+                      isLoading={delaying[index]}
+                      size="sm"
+                      isIconOnly
+                      onPress={() => onGroupDelay(index)}
+                    >
+                      <TiFlash className="text-lg text-foreground-500" />
+                    </Button>
+                  </div>
                   <IoIosArrowBack
-                    className={`transition duration-200 ml-2 h-[32px] text-lg text-foreground-500 ${isOpen[index] ? '-rotate-90' : ''}`}
+                    className={`transition duration-200 ml-2 h-[32px] text-lg text-foreground-500 flex items-center ${isOpen[index] ? '-rotate-90' : ''}`}
                   />
                 </div>
               </div>
@@ -316,7 +330,8 @@ const Proxies: React.FC = () => {
       updateSearchValue,
       scrollToCurrentProxy,
       onGroupDelay,
-      mutate
+      mutate,
+      groupDisplayLayout
     ]
   )
 
@@ -346,6 +361,7 @@ const Proxies: React.FC = () => {
                 proxy={allProxies[groupIndex][innerIndex * cols + i]}
                 group={groups[groupIndex]}
                 proxyDisplayMode={proxyDisplayMode}
+                proxyDisplayLayout={proxyDisplayLayout}
                 selected={
                   allProxies[groupIndex][innerIndex * cols + i]?.name === groups[groupIndex].now
                 }
@@ -366,13 +382,14 @@ const Proxies: React.FC = () => {
       onProxyDelay,
       onChangeProxy,
       groups,
-      proxyDisplayMode
+      proxyDisplayMode,
+      proxyDisplayLayout
     ]
   )
 
   return (
     <BasePage
-      title="代理组"
+      title="策略组"
       header={
         <>
           <Button
@@ -383,11 +400,11 @@ const Proxies: React.FC = () => {
             onPress={handleProxyDisplayOrderChange}
           >
             {proxyDisplayOrder === 'default' ? (
-              <TbCircleLetterD className="text-lg" title="默认" />
+              <RiSortDesc className="text-lg" title="默认" />
             ) : proxyDisplayOrder === 'delay' ? (
-              <MdOutlineSpeed className="text-lg" title="延迟" />
+              <RiSortNumberAsc className="text-lg" title="延迟" />
             ) : (
-              <RxLetterCaseCapitalize className="text-lg" title="名称" />
+              <RiSortAlphabetAsc className="text-lg" title="名称" />
             )}
           </Button>
           <Button

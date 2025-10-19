@@ -58,8 +58,8 @@ if (process.platform === 'win32' && !is.dev && !process.argv.includes('noadmin')
         // ignore
       }
       dialog.showErrorBox(
-        '首次启动请以管理员权限运行',
-        `首次启动请以管理员权限运行\n${createErrorStr}\n${eStr}`
+        '首次启动请以管理员身份运行',
+        `1. 找到桌面 Sparkle 图标\n\n2. 右键\n\n3. 以管理员身份运行`
       )
     } finally {
       app.exit()

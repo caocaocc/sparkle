@@ -17,7 +17,7 @@ import { copyFileSync, writeFileSync } from 'fs'
 
 export function getFilePath(ext: string[]): string[] | undefined {
   return dialog.showOpenDialogSync({
-    title: '选择订阅文件',
+    title: '选择配置文件',
     filters: [{ name: `${ext} file`, extensions: ext }],
     properties: ['openFile']
   })

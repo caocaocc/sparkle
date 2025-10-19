@@ -28,6 +28,7 @@ const OutboundModeSwitcher: React.FC<Props> = (props) => {
     window.electron.ipcRenderer.send('updateTrayMenu')
   }
   if (!mode) return null
+  if (!iconOnly) return null
   if (iconOnly) {
     return (
       <Tabs
@@ -44,21 +45,6 @@ const OutboundModeSwitcher: React.FC<Props> = (props) => {
       </Tabs>
     )
   }
-  return (
-    <Tabs
-      fullWidth
-      color="primary"
-      selectedKey={mode}
-      classNames={{
-        tabList: 'bg-content1 shadow-medium outbound-mode-card'
-      }}
-      onSelectionChange={(key: Key) => onChangeMode(key as OutboundMode)}
-    >
-      <Tab className={`${mode === 'rule' ? 'font-bold' : ''}`} key="rule" title="规则" />
-      <Tab className={`${mode === 'global' ? 'font-bold' : ''}`} key="global" title="全局" />
-      <Tab className={`${mode === 'direct' ? 'font-bold' : ''}`} key="direct" title="直连" />
-    </Tabs>
-  )
 }
 
 export default OutboundModeSwitcher

@@ -185,7 +185,7 @@ const Override: React.FC = () => {
             isLoading={importing}
             onPress={handleImport}
           >
-            导入
+            下载
           </Button>
           <Dropdown>
             <DropdownTrigger>
@@ -228,7 +228,7 @@ const Override: React.FC = () => {
                 }
               }}
             >
-              <DropdownItem key="open">打开</DropdownItem>
+              <DropdownItem key="open">打开本地覆写</DropdownItem>
               <DropdownItem key="new-yaml">新建 YAML</DropdownItem>
               <DropdownItem key="new-js">新建 JavaScript</DropdownItem>
             </DropdownMenu>

@@ -126,7 +126,7 @@ const SubStoreConfig: React.FC = () => {
                   }}
                 />
               </SettingItem>
-              <SettingItem title="定时同步订阅/文件" divider>
+              <SettingItem title="定时同步配置文件" divider>
                 <div className="flex w-[60%] gap-2">
                   {subStoreBackendSyncCronValue !== subStoreBackendSyncCron && (
                     <Button

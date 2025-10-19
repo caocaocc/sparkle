@@ -21,10 +21,10 @@ import {
   defaultProfile,
   defaultProfileConfig
 } from './template'
-import yaml from 'yaml'
 import { mkdir, writeFile, cp, rm, readdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
+import yaml from 'yaml'
 import {
   startPacServer,
   startSubStoreBackendServer,
@@ -252,7 +252,7 @@ export async function init(): Promise<void> {
   await cleanup()
   await startSubStoreFrontendServer()
   await startSubStoreBackendServer()
-  const { sysProxy, onlyActiveDevice = false, networkDetection = false } = await getAppConfig()
+  const { sysProxy, onlyActiveDevice = false, networkDetection = false, autoEnableSysProxy = true } = await getAppConfig()
   if (networkDetection) {
     await startNetworkDetection()
   }
@@ -260,10 +260,14 @@ export async function init(): Promise<void> {
     if (!(await isHelperInstalled())) {
       await patchAppConfig({ sysProxy: { enable: false } })
     } else {
-      if (sysProxy.enable) {
+      const targetEnable = autoEnableSysProxy ? true : !!sysProxy.enable
+      if (targetEnable && !sysProxy.enable) {
+        await patchAppConfig({ sysProxy: { enable: true } })
+      }
+      if (targetEnable) {
         await startPacServer()
       }
-      await triggerSysProxy(sysProxy.enable, onlyActiveDevice)
+      await triggerSysProxy(targetEnable, onlyActiveDevice)
     }
   } catch {
     // ignore
