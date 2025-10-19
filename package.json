@@ -1,6 +1,6 @@
 {
   "name": "sparkle",
-  "version": "1.6.13",
+  "version": "1.6.12",
   "description": "Sparkle",
   "main": "./out/main/index.js",
   "author": "xishang0128",
@@ -33,6 +33,7 @@
     "adm-zip": "^0.5.16",
     "axios": "^1.12.2",
     "chokidar": "^4.0.3",
+    "chrome-launcher": "1.2.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.18",
     "express": "^5.1.0",

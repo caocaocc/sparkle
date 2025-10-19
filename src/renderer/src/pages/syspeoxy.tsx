@@ -65,7 +65,7 @@ const Sysproxy: React.FC = () => {
           ]
 
   const { appConfig, patchAppConfig } = useAppConfig()
-  const { sysProxy, onlyActiveDevice = false } =
+  const { sysProxy, onlyActiveDevice = false, autoEnableSysProxy = true } =
     appConfig || ({ sysProxy: { enable: false } } as AppConfig)
   const [changed, setChanged] = useState(false)
   const [values, originSetValues] = useState({
@@ -137,6 +137,15 @@ const Sysproxy: React.FC = () => {
         />
       )}
       <SettingCard className="sysproxy-settings">
+        <SettingItem title="自动开启系统代理" divider>
+          <Switch
+            size="sm"
+            isSelected={autoEnableSysProxy}
+            onValueChange={(v) => {
+              patchAppConfig({ autoEnableSysProxy: v })
+            }}
+          />
+        </SettingItem>
         <SettingItem title="代理主机" divider>
           <Input
             size="sm"

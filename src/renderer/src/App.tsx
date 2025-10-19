@@ -111,10 +111,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const tourShown = window.localStorage.getItem('tourShown')
-    if (!tourShown) {
-      window.localStorage.setItem('tourShown', 'true')
-      firstDriver.drive()
-    }
   }, [])
 
   useEffect(() => {
@@ -287,7 +283,7 @@ const App: React.FC = () => {
       )}
       {showProfileInstallConfirm && profileInstallData && (
         <ConfirmModal
-          title="确定要导入订阅配置吗？"
+          title="确定要导入配置吗？"
           description={
             <div>
               <p className="text-sm text-gray-600 mb-2">
@@ -295,7 +291,7 @@ const App: React.FC = () => {
               </p>
               <p className="text-sm text-gray-600 mb-2">链接：{profileInstallData.url}</p>
               <p className="text-sm text-orange-500 mt-2">
-                请确保订阅配置来源可信，恶意配置可能影响您的网络安全
+                请确保配置来源可信，恶意配置可能影响您的网络安全
               </p>
             </div>
           }
@@ -488,9 +484,9 @@ export const firstDriver = driver({
     {
       element: '.profile-card',
       popover: {
-        title: '订阅管理',
+        title: '配置管理',
         description:
-          '订阅管理卡片展示当前运行的订阅配置信息，点击进入订阅管理页面可以在这里管理订阅配置',
+          '配置管理卡片展示当前运行的配置信息，点击进入配置管理页面可以在这里管理配置',
         side: 'right',
         align: 'start',
         onNextClick: async (): Promise<void> => {
@@ -504,9 +500,9 @@ export const firstDriver = driver({
     {
       element: '.profiles-sticky',
       popover: {
-        title: '订阅导入',
+        title: '配置导入',
         description:
-          'Sparkle 支持多种订阅导入方式，在此输入订阅链接，点击导入即可导入您的订阅配置，如果您的订阅需要代理才能更新，请勾选“代理”再点击导入，当然这需要已经有一个可以正常使用的订阅才可以',
+          'Sparkle 支持多种配置导入方式，在此输入订阅链接，点击下载即可导入您的配置，如果您的订阅需要代理才能更新，请勾选“代理”再点击导入，当然这需要已经有一个可以正常使用的订阅才可以',
         side: 'bottom',
         align: 'start'
       }
@@ -524,7 +520,7 @@ export const firstDriver = driver({
     {
       element: '.new-profile',
       popover: {
-        title: '本地订阅',
+        title: '本地配置',
         description: '点击“+”可以选择本地文件进行导入或者直接新建空白配置进行编辑',
         side: 'bottom',
         align: 'start'
@@ -535,7 +531,7 @@ export const firstDriver = driver({
       popover: {
         title: '系统代理',
         description:
-          '导入订阅之后，内核已经开始运行并监听指定端口，此时您已经可以通过指定代理端口来使用代理了，如果您要使大部分应用自动使用该端口的代理，您还需要打开系统代理开关',
+          '导入配置之后，内核已经开始运行并监听指定端口，此时您已经可以通过指定代理端口来使用代理了，如果您要使大部分应用自动使用该端口的代理，您还需要打开系统代理开关',
         side: 'right',
         align: 'start',
         onNextClick: async (): Promise<void> => {
@@ -587,7 +583,7 @@ export const firstDriver = driver({
       popover: {
         title: '覆写',
         description:
-          'Sparkle 提供强大的覆写功能，可以对您导入的订阅配置进行个性化修改，如添加规则、自定义代理组等，您可以直接导入别人写好的覆写文件，也可以自己动手编写，<b>编辑好覆写文件一定要记得在需要覆写的订阅上启用</b>，覆写文件的语法请参考 <a href="https://mihomo.party/docs/guide/override" target="_blank">官方文档</a>',
+          'Sparkle 提供强大的覆写功能，可以对您导入的配置进行个性化修改，如添加规则、自定义策略组等，您可以直接导入别人写好的覆写文件，也可以自己动手编写，<b>编辑好覆写文件一定要记得在需要覆写的订阅上启用</b>，覆写文件的语法请参考 <a href="https://clashparty.org/docs/guide/override" target="_blank">官方文档</a>',
         side: 'right',
         align: 'center'
       }
@@ -597,7 +593,7 @@ export const firstDriver = driver({
       popover: {
         title: 'DNS',
         description:
-          '软件默认接管了内核的 DNS 设置，如果您需要使用订阅配置中的 DNS 设置，可以到应用设置中关闭“接管 DNS 设置”，域名嗅探同理',
+          '软件默认接管了内核的 DNS 设置，如果您需要使用配置中的 DNS 设置，可以到应用设置中关闭“接管 DNS 设置”，域名嗅探同理',
         side: 'right',
         align: 'center',
         onNextClick: async (): Promise<void> => {
@@ -612,7 +608,7 @@ export const firstDriver = driver({
       element: 'none',
       popover: {
         title: '教程结束',
-        description: '现在您已经了解了软件的基本用法，导入您的订阅开始使用吧，祝您使用愉快！',
+        description: '现在您已经了解了软件的基本用法，导入您的配置开始使用吧，祝您使用愉快！',
         side: 'top',
         align: 'center',
         onNextClick: async (): Promise<void> => {

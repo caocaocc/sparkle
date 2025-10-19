@@ -263,7 +263,7 @@ const ProfileItem: React.FC<Props> = (props) => {
               <div
                 className={`mt-2 flex justify-between ${isCurrent ? 'text-primary-foreground' : 'text-foreground'}`}
               >
-                <small>{`${calcTraffic(usage)}/${calcTraffic(total)}`}</small>
+                <small>{`${calcTraffic(usage)} / ${calcTraffic(total)}`}</small>
                 {profileDisplayDate === 'expire' ? (
                   <Button
                     size="sm"
