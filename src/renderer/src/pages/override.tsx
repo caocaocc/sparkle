@@ -153,7 +153,7 @@ const Override: React.FC = () => {
             isIconOnly
             className="app-nodrag"
             onPress={() => {
-              open('https://mihomo.party/docs/guide/override')
+              open('https://clashparty.org/docs/guide/override')
             }}
           >
             <HiOutlineDocumentText className="text-lg" />
@@ -202,7 +202,7 @@ const Override: React.FC = () => {
             isLoading={importing}
             onPress={handleImport}
           >
-            导入
+            下载
           </Button>
           <Dropdown>
             <DropdownTrigger>
@@ -232,14 +232,14 @@ const Override: React.FC = () => {
                   await addOverrideItem({
                     name: '新建 YAML',
                     type: 'local',
-                    file: '# https://mihomo.party/docs/guide/override/yaml',
+                    file: '# https://clashparty.org/docs/guide/override/yaml',
                     ext: 'yaml'
                   })
                 } else if (key === 'new-js') {
                   await addOverrideItem({
                     name: '新建 JS',
                     type: 'local',
-                    file: '// https://mihomo.party/docs/guide/override/javascript\nfunction main(config) {\n  return config\n}',
+                    file: '// https://clashparty.org/docs/guide/override/javascript\nfunction main(config) {\n  return config\n}',
                     ext: 'js'
                   })
                 } else if (key === 'import') {

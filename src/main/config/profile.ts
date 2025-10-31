@@ -40,7 +40,7 @@ export async function setProfileConfig(config: ProfileConfig): Promise<void> {
 
 export async function getProfileItem(id: string | undefined): Promise<ProfileItem | undefined> {
   const { items } = await getProfileConfig()
-  if (!id || id === 'default') return { id: 'default', type: 'local', name: '空白订阅' }
+  if (!id || id === 'default') return { id: 'default', type: 'local', name: '配置' }
   return items.find((item) => item.id === id)
 }
 
@@ -112,7 +112,7 @@ export async function removeProfileItem(id: string): Promise<void> {
 
 export async function getCurrentProfileItem(): Promise<ProfileItem> {
   const { current } = await getProfileConfig()
-  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '空白订阅' }
+  return (await getProfileItem(current)) || { id: 'default', type: 'local', name: '配置' }
 }
 
 export async function createProfile(item: Partial<ProfileItem>): Promise<ProfileItem> {
@@ -203,16 +203,22 @@ export async function createProfile(item: Partial<ProfileItem>): Promise<Profile
             }
           }
 
-          res = await axios.get(item.url, {
-            httpsAgent,
-            ...(newItem.useProxy &&
-              mixedPort &&
-              !item.fingerprint && {
-                proxy: { protocol: 'http', host: '127.0.0.1', port: mixedPort }
-              }),
-            headers: { 'User-Agent': newItem.ua || (await getUserAgent()) },
-            responseType: 'text'
-          })
+          try {
+            res = await axios.get(item.url, {
+              httpsAgent,
+              proxy: { protocol: 'http', host: '127.0.0.1', port: mixedPort },
+              headers: { 'User-Agent': newItem.ua || (await getUserAgent()) },
+              responseType: 'text',
+              timeout: 5000
+            })
+          } catch (error) {
+            res = await axios.get(item.url, {
+              httpsAgent,
+              headers: { 'User-Agent': newItem.ua || (await getUserAgent()) },
+              responseType: 'text',
+              timeout: 5000,
+            })
+          }
         } catch (error) {
           if (axios.isAxiosError(error)) {
             if (error.code === 'ECONNRESET' || error.code === 'ECONNABORTED') {

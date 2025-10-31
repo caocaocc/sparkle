@@ -51,13 +51,13 @@ const MihomoConfig: React.FC = () => {
   }
 
   return (
-    <SettingCard title="订阅与代理组设置">
-      <SettingItem title="订阅拉取 UA" divider>
+    <SettingCard title="订阅与策略组设置">
+      <SettingItem title="订阅拉取 User-Agent" divider>
         <Input
           size="sm"
           className="w-[60%]"
           value={ua}
-          placeholder={`默认 ${defaultUserAgent}`}
+          placeholder={`${defaultUserAgent}`}
           onValueChange={(v) => {
             setUa(v)
             setUaDebounce(v)
@@ -69,7 +69,7 @@ const MihomoConfig: React.FC = () => {
           size="sm"
           className="w-[60%]"
           value={url}
-          placeholder="默认 https://www.gstatic.com/generate_204"
+          placeholder="http://www.gstatic.com/generate_204"
           onValueChange={(v) => {
             setUrl(v)
             setUrlDebounce(v)
@@ -82,7 +82,7 @@ const MihomoConfig: React.FC = () => {
           size="sm"
           className="w-[60%]"
           value={delayTestConcurrency?.toString()}
-          placeholder="默认 50"
+          placeholder="50"
           onValueChange={(v) => {
             patchAppConfig({ delayTestConcurrency: parseInt(v) })
           }}
@@ -94,7 +94,7 @@ const MihomoConfig: React.FC = () => {
           size="sm"
           className="w-[60%]"
           value={delayTestTimeout?.toString()}
-          placeholder="默认 5000"
+          placeholder="5000"
           onValueChange={(v) => {
             patchAppConfig({ delayTestTimeout: parseInt(v) })
           }}
@@ -216,7 +216,7 @@ const MihomoConfig: React.FC = () => {
       <SettingItem
         title="为不同订阅分别指定工作目录"
         actions={
-          <Tooltip content="开启后可以避免不同订阅中存在相同代理组名时无法分别保存选择的节点">
+          <Tooltip content="开启后可以避免不同订阅中存在相同策略组名时无法分别保存选择的节点">
             <Button isIconOnly size="sm" variant="light">
               <IoIosHelpCircle className="text-lg" />
             </Button>

@@ -160,6 +160,7 @@ async function migration(): Promise<void> {
     useSubStore = true,
     showFloatingWindow = false,
     disableTray = false,
+    autoEnableSysProxy,
     encryptedPassword,
     hosts = []
   } = await getAppConfig()
@@ -225,6 +226,9 @@ async function migration(): Promise<void> {
   if (!showFloatingWindow && disableTray) {
     await patchAppConfig({ disableTray: false })
   }
+  if (autoEnableSysProxy === undefined) {
+    await patchAppConfig({ autoEnableSysProxy: true })
+  }
   // remove password
   if (encryptedPassword) {
     await patchAppConfig({ encryptedPassword: undefined })
@@ -254,11 +258,15 @@ export async function init(): Promise<void> {
   await initKeyManager()
   await startSubStoreFrontendServer()
   await startSubStoreBackendServer()
-  const { sysProxy, onlyActiveDevice = false, networkDetection = false } = await getAppConfig()
+  const { sysProxy, onlyActiveDevice = false, networkDetection = false, autoEnableSysProxy = true } = await getAppConfig()
   if (networkDetection) {
     await startNetworkDetection()
   }
   try {
+    if (autoEnableSysProxy && !sysProxy.enable) {
+      await patchAppConfig({ sysProxy: { ...sysProxy, enable: true } })
+      sysProxy.enable = true
+    }
     if (sysProxy.enable) {
       await startPacServer()
     }

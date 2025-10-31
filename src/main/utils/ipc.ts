@@ -125,6 +125,7 @@ import { startMonitor } from '../resolve/trafficMonitor'
 import { closeFloatingWindow, showContextMenu, showFloatingWindow } from '../resolve/floatingWindow'
 import { getAppName } from './appName'
 import { getUserAgent } from './userAgent'
+import { launchChrome } from '../resolve/chrome'
 
 function ipcErrorWrapper<T>( // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fn: (...args: any[]) => Promise<T> // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -310,6 +311,7 @@ export function registerIpcMainHandlers(): void {
   ipcMain.handle('readTheme', (_e, theme) => ipcErrorWrapper(readTheme)(theme))
   ipcMain.handle('writeTheme', (_e, theme, css) => ipcErrorWrapper(writeTheme)(theme, css))
   ipcMain.handle('applyTheme', (_e, theme) => ipcErrorWrapper(applyTheme)(theme))
+  ipcMain.handle('launchChrome', () => ipcErrorWrapper(launchChrome)())
   ipcMain.handle('copyEnv', (_e, type) => ipcErrorWrapper(copyEnv)(type))
   ipcMain.handle('alert', (_e, msg) => {
     dialog.showErrorBox('Sparkle', msg)

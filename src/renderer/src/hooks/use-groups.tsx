@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 import { mihomoGroups } from '@renderer/utils/ipc'
 
@@ -12,7 +12,11 @@ const GroupsContext = createContext<GroupsContextType | undefined>(undefined)
 export const GroupsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { data: groups, mutate } = useSWR<ControllerMixedGroup[]>('mihomoGroups', mihomoGroups, {
     errorRetryInterval: 200,
-    errorRetryCount: 10
+    errorRetryCount: 10,
+    refreshInterval: 2000,
+    dedupingInterval: 1000,
+    keepPreviousData: true,
+    revalidateOnFocus: false
   })
 
   React.useEffect(() => {

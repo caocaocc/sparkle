@@ -564,6 +564,10 @@ export async function copyEnv(type: 'bash' | 'cmd' | 'powershell' | 'nushell'): 
   return ipcErrorWrapper(await window.electron.ipcRenderer.invoke('copyEnv', type))
 }
 
+export async function launchChrome(): Promise<void> {
+  return ipcErrorWrapper(await window.electron.ipcRenderer.invoke('launchChrome'))
+}
+
 async function alert<T>(msg: T): Promise<void> {
   const msgStr = typeof msg === 'string' ? msg : JSON.stringify(msg)
   return await window.electron.ipcRenderer.invoke('alert', msgStr)

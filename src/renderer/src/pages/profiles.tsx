@@ -212,11 +212,11 @@ const Profiles: React.FC = () => {
   return (
     <BasePage
       ref={pageRef}
-      title="订阅管理"
+      title="配置管理"
       header={
         <Button
           size="sm"
-          title="更新全部订阅"
+          title="更新全部配置"
           className="app-nodrag"
           variant="light"
           isIconOnly
@@ -257,6 +257,7 @@ const Profiles: React.FC = () => {
           <Input
             size="sm"
             value={url}
+            placeholder="请输入订阅地址"
             onValueChange={setUrl}
             onKeyUp={handleInputKeyUp}
             endContent={
@@ -293,7 +294,7 @@ const Profiles: React.FC = () => {
             isLoading={importing}
             onPress={() => handleImport(url)}
           >
-            导入
+            下载
           </Button>
           {useSubStore && (
             <Dropdown
@@ -398,7 +399,7 @@ const Profiles: React.FC = () => {
                       await addProfileItem({
                         name: '新配置',
                         type: 'local',
-                        file: 'proxies: []\nproxy-groups: []\nrules: []'
+                        file: ''
                       })
                     }
                     break

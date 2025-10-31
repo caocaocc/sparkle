@@ -42,10 +42,10 @@ const EditFileModal: React.FC<Props> = (props) => {
       <ModalContent className="h-full w-[calc(100%-100px)]">
         <ModalHeader className="flex pb-0 app-drag">
           <div className="flex justify-start">
-            <div className="flex items-center">编辑订阅</div>
+            <div className="flex items-center">编辑配置</div>
             {props.isRemote && (
               <small className="ml-2 text-foreground-500">
-                注意：此处编辑配置更新订阅后会还原，如需要自定义配置请使用
+                注意：此处编辑配置更新配置后会还原，如需要自定义配置请使用
                 <Button
                   size="sm"
                   color="primary"

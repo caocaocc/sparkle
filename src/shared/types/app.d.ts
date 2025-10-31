@@ -79,6 +79,7 @@ interface AppConfig {
   silentStart: boolean
   autoCloseConnection: boolean
   sysProxy: ISysProxyConfig
+  autoEnableSysProxy?: boolean
   maxLogDays: number
   userAgent?: string
   delayTestConcurrency?: number
