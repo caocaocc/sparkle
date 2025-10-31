@@ -286,6 +286,8 @@ interface IAppConfig {
   disableNftables: boolean
   safePaths: string[]
   proxyDisplayMode: 'simple' | 'full'
+  proxyDisplayLayout?: 'single' | 'double'
+  groupDisplayLayout?: 'single' | 'double'
   proxyDisplayOrder: 'default' | 'delay' | 'name'
   profileDisplayDate?: 'expire' | 'update'
   envType?: ('bash' | 'cmd' | 'powershell' | 'nushell')[]
@@ -333,6 +335,7 @@ interface IAppConfig {
   autoCheckUpdate: boolean
   silentStart: boolean
   autoCloseConnection: boolean
+  autoEnableSysProxy?: boolean
   sysProxy: ISysProxyConfig
   maxLogDays: number
   userAgent?: string

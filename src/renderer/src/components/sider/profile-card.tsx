@@ -46,17 +46,18 @@ const ProfileCard: React.FC<Props> = (props) => {
   const info = items?.find((item) => item.id === current) ?? {
     id: 'default',
     type: 'local',
-    name: '空白订阅'
+    name: '配置'
   }
 
   const extra = info?.extra
   const usage = (extra?.upload ?? 0) + (extra?.download ?? 0)
   const total = extra?.total ?? 0
+  const isToday = info?.updated ? dayjs().diff(dayjs(info.updated), 'hour') < 24 : true
 
   if (iconOnly) {
     return (
       <div className={`${profileCardStatus} flex justify-center`}>
-        <Tooltip content="订阅管理" placement="right">
+        <Tooltip content="配置管理" placement="right">
           <Button
             size="sm"
             isIconOnly
@@ -135,7 +136,7 @@ const ProfileCard: React.FC<Props> = (props) => {
                       }}
                     >
                       <IoMdRefresh
-                        className={`text-[24px] ${match ? 'text-primary-foreground' : 'text-foreground'} ${updating ? 'animate-spin' : ''}`}
+                        className={`text-[24px] ${isToday ? (match ? 'text-primary-foreground' : 'text-foreground') : 'text-danger'} ${updating ? 'animate-spin' : ''}`}
                       />
                     </Button>
                   </Tooltip>
@@ -146,7 +147,7 @@ const ProfileCard: React.FC<Props> = (props) => {
               <div
                 className={`mt-2 flex justify-between ${match ? 'text-primary-foreground' : 'text-foreground'} `}
               >
-                <small>{`${calcTraffic(usage)}/${calcTraffic(total)}`}</small>
+                <small>{`${calcTraffic(usage)} / ${calcTraffic(total)}`}</small>
                 {profileDisplayDate === 'expire' ? (
                   <Button
                     size="sm"
@@ -251,7 +252,7 @@ const ProfileCard: React.FC<Props> = (props) => {
             <h3
               className={`text-md font-bold ${match ? 'text-primary-foreground' : 'text-foreground'}`}
             >
-              订阅管理
+              配置管理
             </h3>
           </CardFooter>
         </Card>

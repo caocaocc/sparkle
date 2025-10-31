@@ -228,7 +228,7 @@ export const buildContextMenu = async (): Promise<Menu> => {
     { type: 'separator' },
     {
       type: 'submenu',
-      label: '订阅配置',
+      label: '配置',
       submenu: items.map((item) => {
         return {
           type: 'radio',

@@ -7,7 +7,7 @@ import PacEditorModal from '@renderer/components/sysproxy/pac-editor-modal'
 import { useAppConfig } from '@renderer/hooks/use-app-config'
 import { platform } from '@renderer/utils/init'
 import { openUWPTool, triggerSysProxy } from '@renderer/utils/ipc'
-import React, { Key, useState } from 'react'
+import React, { Key, useEffect, useState } from 'react'
 import ByPassEditorModal from '@renderer/components/sysproxy/bypass-editor-modal'
 import { IoIosHelpCircle } from 'react-icons/io'
 
@@ -65,7 +65,7 @@ const Sysproxy: React.FC = () => {
           ]
 
   const { appConfig, patchAppConfig } = useAppConfig()
-  const { sysProxy, onlyActiveDevice = false } =
+  const { sysProxy, onlyActiveDevice = false, autoEnableSysProxy = true } =
     appConfig || ({ sysProxy: { enable: false } } as IAppConfig)
   const [changed, setChanged] = useState(false)
   const [values, originSetValues] = useState({
@@ -75,22 +75,26 @@ const Sysproxy: React.FC = () => {
     mode: sysProxy.mode ?? 'manual',
     pacScript: sysProxy.pacScript ?? defaultPacScript
   })
+  useEffect(() => {
+    originSetValues((prev) => ({
+      ...prev,
+      enable: sysProxy.enable
+    }))
+  }, [sysProxy.enable])
   const [openEditor, setOpenEditor] = useState(false)
+  const [openPacEditor, setOpenPacEditor] = useState(false)
 
   const setValues = (v: typeof values): void => {
     originSetValues(v)
     setChanged(true)
   }
-
-  const [openPacEditor, setOpenPacEditor] = useState(false)
-
   const onSave = async (): Promise<void> => {
     // check valid TODO
     await patchAppConfig({ sysProxy: values })
+    setChanged(false)
     if (values.enable) {
       try {
         await triggerSysProxy(values.enable, onlyActiveDevice)
-        setChanged(false)
       } catch (e) {
         alert(e)
         await patchAppConfig({ sysProxy: { enable: false } })
@@ -133,6 +137,15 @@ const Sysproxy: React.FC = () => {
         />
       )}
       <SettingCard className="sysproxy-settings">
+        <SettingItem title="自动开启系统代理" divider>
+          <Switch
+            size="sm"
+            isSelected={autoEnableSysProxy}
+            onValueChange={(v) => {
+              patchAppConfig({ autoEnableSysProxy: v })
+            }}
+          />
+        </SettingItem>
         <SettingItem title="代理主机" divider>
           <Input
             size="sm"

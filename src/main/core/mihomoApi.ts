@@ -121,9 +121,11 @@ export const mihomoGroups = async (): Promise<IMihomoMixedGroup[]> => {
       groups.push({ ...newGlobal, all: newAll })
     }
   }
+  if (mode === 'rule') {
+    return groups.filter((group) => group.name !== 'GLOBAL')
+  }
   if (mode === 'global') {
-    const global = groups.findIndex((group) => group.name === 'GLOBAL')
-    groups.unshift(groups.splice(global, 1)[0])
+    return groups.filter((group) => group.name === 'GLOBAL')
   }
   return groups
 }
@@ -164,7 +166,7 @@ export const mihomoProxyDelay = async (proxy: string, url?: string): Promise<IMi
   const instance = await getAxios()
   return await instance.get(`/proxies/${encodeURIComponent(proxy)}/delay`, {
     params: {
-      url: url || delayTestUrl || 'https://www.gstatic.com/generate_204',
+      url: url || delayTestUrl || 'http://www.gstatic.com/generate_204',
       timeout: delayTestTimeout || 5000
     }
   })
@@ -176,7 +178,7 @@ export const mihomoGroupDelay = async (group: string, url?: string): Promise<IMi
   const instance = await getAxios()
   return await instance.get(`/group/${encodeURIComponent(group)}/delay`, {
     params: {
-      url: url || delayTestUrl || 'https://www.gstatic.com/generate_204',
+      url: url || delayTestUrl || 'http://www.gstatic.com/generate_204',
       timeout: delayTestTimeout || 5000
     }
   })

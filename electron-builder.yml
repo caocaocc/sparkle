@@ -28,9 +28,9 @@ win:
   target:
     - nsis
     - 7z
-  artifactName: ${name}-windows-${version}-${arch}-portable.${ext}
+  artifactName: ${name}-windows-${version}-${arch}-compatible-portable.${ext}
 nsis:
-  artifactName: ${name}-windows-${version}-${arch}-setup.${ext}
+  artifactName: ${name}-windows-${version}-${arch}-compatible-setup.${ext}
   uninstallDisplayName: ${productName}
   allowToChangeInstallationDirectory: true
   oneClick: false
@@ -46,7 +46,7 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
-  artifactName: ${name}-macos-${version}-${arch}.${ext}
+  artifactName: ${name}-macos-${version}-${arch}-compatible.${ext}
 pkg:
   allowAnywhere: false
   allowCurrentUserHome: false
@@ -64,13 +64,13 @@ linux:
     - pacman
   maintainer: xishang0128
   category: Utility
-  artifactName: ${name}-linux-${version}-${arch}.${ext}
+  artifactName: ${name}-linux-${version}-${arch}-compatible.${ext}
 deb:
   afterInstall: 'build/linux/postinst'
 rpm:
   afterInstall: 'build/linux/postinst'
 pacman:
   afterInstall: 'build/linux/postinst'
-  artifactName: ${name}-linux-${version}-${arch}.pkg.tar.xz
+  artifactName: ${name}-linux-${version}-${arch}-compatible.pkg.tar.xz
 npmRebuild: true
 publish: []

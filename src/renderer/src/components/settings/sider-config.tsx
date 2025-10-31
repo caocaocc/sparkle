@@ -6,8 +6,8 @@ import { useAppConfig } from '@renderer/hooks/use-app-config'
 const titleMap = {
   sysproxyCardStatus: '系统代理',
   tunCardStatus: '虚拟网卡',
-  profileCardStatus: '订阅管理',
-  proxyCardStatus: '代理组',
+  profileCardStatus: '配置管理',
+  proxyCardStatus: '策略组',
   ruleCardStatus: '规则',
   resourceCardStatus: '外部资源',
   overrideCardStatus: '覆写',
